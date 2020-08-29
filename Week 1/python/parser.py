@@ -11,15 +11,18 @@
         then simply type 'python parser.py'
 """
 import json
-
-# assigning variables
-list1 = []
+import datetime
 
 """
     For readability I have divided the operations into 2 functions,
     file_handler just opens the JSON file and passes the objects to parser()
     which then models the data
 """
+
+# assigning variables
+list1 = []
+
+
 def file_handler():
     with open("data.json") as json_file:
         data = json.load(json_file)
@@ -32,12 +35,23 @@ def parser(data):
     for ele in data:
            if ele["creditcard"] is not None:
                 count+=1
-                list1.append(ele["name"])
+                list1.append(ele["name"]+ "," +ele["creditcard"])
+    # print(list1[0])
+    print("writing data of everyone without a credit card to file ")
+    file_generator(list1)
 
-    print(list1)
+def file_generator(data_list):
+
+    # create a file with the name current date
+    date = datetime.datetime.now()
+    filename = str(date.year)+"" + str(date.month).zfill(2) + str(date.day).zfill(2)
+    file = open(filename+".csv","w+")
+
+    for entry in data_list:
+        file.write(entry+"\n")
+
+    print("File by the name of "+ filename+ ".csv populated")
 
 
-
-
-
-file_handler()
+if __name__ == '__main__':
+   file_handler()
